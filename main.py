@@ -88,5 +88,5 @@ for i in files_list_all:
 
 	f = open(result_file, "a")
 	f.write("// Text len {0} / {1}\n".format(len(text), len(text_save)))
-	f.write("char " + file_type + "_file[] = "+text+"\n")
+	f.write("const char " + file_type + "_file[] = "+text+";\n")
 	f.close()
