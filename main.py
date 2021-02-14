@@ -1,4 +1,5 @@
 from css_html_js_minify import process_single_html_file, process_single_js_file, process_single_css_file, html_minify, js_minify, css_minify
+import htmlmin
 
 result_file = "content/result.txt"
 
@@ -67,7 +68,7 @@ for i in files_list_all:
 	text_save = text
 
 	if i.split(".")[-1] == "html":
-		text = html_minify(text)
+		text = htmlmin.minify(text, remove_empty_space = True, remove_comments = True)
 		file_type = "html"
 	elif i.split(".")[-1] == "css":
 		text = css_minify(text)
@@ -80,7 +81,7 @@ for i in files_list_all:
 		file_type = "undefined"
 	
 
-	print(process_text(text))
+	text = process_text(text)
 
 	print("Text size {0} / {1}".format(len(text), len(text_save)))
 	print(" --- ")
