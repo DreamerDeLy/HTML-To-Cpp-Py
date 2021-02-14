@@ -51,12 +51,24 @@ files_list_all = files_list_html + files_list_css + files_list_js
 
 print(" --- ")
 
-for i in files_list_html:
+for i in files_list_all:
 	print("File: "+i)
 	f = open(i, "r")
 
 	text = f.read()
-	text = html_minify(text)
+	text_save = text
+
+	if i.split(".")[-1] == "html":
+		text = html_minify(text)
+	elif i.split(".")[-1] == "css":
+		text = css_minify(text)
+	elif i.split(".")[-1] == "js":
+		text = js_minify(text)
+	else:
+		print("!file extention undetected")
+	
 
 	print(process_text(text))
+
+	print("Text size {0} / {1}".format(len(text), len(text_save)))
 	print(" --- ")
