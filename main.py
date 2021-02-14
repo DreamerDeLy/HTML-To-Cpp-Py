@@ -1,5 +1,7 @@
 from css_html_js_minify import process_single_html_file, process_single_js_file, process_single_css_file, html_minify, js_minify, css_minify
 
+result_file = "content/result.txt"
+
 def process_text(text):
 	output = "\""
 	splitLines = False
@@ -10,9 +12,9 @@ def process_text(text):
 			output += "\\f"
 		elif s == '\n':
 			if splitLines:
-				output += "\\n\"\n\"";
+				output += "\\n\"\n\""
 			else:
-				output += "\\n";
+				output += "\\n"
 		elif s == '\r':
 			output += "\\r"
 		elif s == '\t':
@@ -35,15 +37,15 @@ def process_text(text):
 
 import glob
 
-files_list_html = glob.glob('./*.html')
+files_list_html = glob.glob('./content/*.html')
 print("html:")
 print(files_list_html)
 
-files_list_css = glob.glob('./*.css')
+files_list_css = glob.glob('./content/*.css')
 print("css:")
 print(files_list_css)
 
-files_list_js = glob.glob('./*.js')
+files_list_js = glob.glob('./content/*.js')
 print("js:")
 print(files_list_js)
 
@@ -51,7 +53,13 @@ files_list_all = files_list_html + files_list_css + files_list_js
 
 print(" --- ")
 
+f = open(result_file, "w")
+f.write("")
+f.close()
+
 for i in files_list_all:
+	file_type = ""
+
 	print("File: "+i)
 	f = open(i, "r")
 
@@ -60,15 +68,24 @@ for i in files_list_all:
 
 	if i.split(".")[-1] == "html":
 		text = html_minify(text)
+		file_type = "html"
 	elif i.split(".")[-1] == "css":
 		text = css_minify(text)
+		file_type = "css"
 	elif i.split(".")[-1] == "js":
 		text = js_minify(text)
+		file_type = "js"
 	else:
 		print("!file extention undetected")
+		file_type = "undefined"
 	
 
 	print(process_text(text))
 
 	print("Text size {0} / {1}".format(len(text), len(text_save)))
 	print(" --- ")
+
+	f = open(result_file, "a")
+	f.write("// Text len {0} / {1}\n".format(len(text), len(text_save)))
+	f.write("char " + file_type + "_file[] = "+text+"\n")
+	f.close()
