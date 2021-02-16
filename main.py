@@ -1,24 +1,27 @@
 import sys
 import requests
+import glob
 
 from css_html_js_minify import process_single_html_file, process_single_js_file, process_single_css_file, html_minify, js_minify, css_minify
 import htmlmin
 
-use_api_for_css = True
-use_api_for_js = True
+use_api_for_html = False # use WEB service for HTML minify
+use_api_for_css = True # use WEB service for CSS minify
+use_api_for_js = True # use WEB service for JS minify
 
-result_file = "content/result.txt"
+split_lines = False # split output into multiple lines
+escape_percent = False # escape % character to %% (for printf formatting string)
+
+result_file = "content/result.txt" # output file
 
 def process_text(text):
 	output = "\""
-	splitLines = False
-	escapePercent = False
 
 	for s in text:
 		if s == '\f':
 			output += "\\f"
 		elif s == '\n':
-			if splitLines:
+			if split_lines:
 				output += "\\n\"\n\""
 			else:
 				output += "\\n"
@@ -31,7 +34,7 @@ def process_text(text):
 		elif s == '\\':
 			output += "\\\\"
 		elif s == '%':
-			if escapePercent:
+			if escape_percent:
 				output += "%%"
 			else:
 				output += "%"
@@ -41,6 +44,13 @@ def process_text(text):
 	output += "\""
 
 	return output
+
+def minify_html_by_api(html):
+	payload = {'input': html}
+	url = 'https://html-minifier.com/raw'
+	print("Requesting HTML formatting. . .")
+	r = requests.post(url, payload)
+	return r.text
 
 def minify_css_by_api(css):
 	payload = {'input': css}
@@ -55,8 +65,6 @@ def minify_js_by_api(js):
 	print("Requesting JS formatting. . .")
 	r = requests.post(url, payload)
 	return r.text
-
-import glob
 
 files_list_html = glob.glob('./content/*.html')
 print("html:")
@@ -89,7 +97,10 @@ for i in files_list_all:
 
 	if i.split(".")[-1] == "html":
 		file_type = "html"
-		text = htmlmin.minify(text, remove_empty_space = True, remove_comments = True)
+		if (use_api_for_html):
+			text = minify_html_by_api(text)
+		else:
+			text = htmlmin.minify(text, remove_empty_space = True, remove_comments = True)
 	elif i.split(".")[-1] == "css":
 		file_type = "css"
 		if (use_api_for_css):
