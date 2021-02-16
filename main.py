@@ -1,5 +1,11 @@
+import sys
+import requests
+
 from css_html_js_minify import process_single_html_file, process_single_js_file, process_single_css_file, html_minify, js_minify, css_minify
 import htmlmin
+
+use_api_for_css = True
+use_api_for_js = True
 
 result_file = "content/result.txt"
 
@@ -36,6 +42,20 @@ def process_text(text):
 
 	return output
 
+def minify_css_by_api(css):
+	payload = {'input': css}
+	url = 'https://cssminifier.com/raw'
+	print("Requesting CSS formatting. . .")
+	r = requests.post(url, payload)
+	return r.text
+
+def minify_js_by_api(js):
+	payload = {'input': js}
+	url = 'https://javascript-minifier.com/raw'
+	print("Requesting JS formatting. . .")
+	r = requests.post(url, payload)
+	return r.text
+
 import glob
 
 files_list_html = glob.glob('./content/*.html')
@@ -68,17 +88,23 @@ for i in files_list_all:
 	text_save = text
 
 	if i.split(".")[-1] == "html":
-		text = htmlmin.minify(text, remove_empty_space = True, remove_comments = True)
 		file_type = "html"
+		text = htmlmin.minify(text, remove_empty_space = True, remove_comments = True)
 	elif i.split(".")[-1] == "css":
-		text = css_minify(text)
 		file_type = "css"
+		if (use_api_for_css):
+			text = minify_css_by_api(text)
+		else:
+			text = css_minify(text)
 	elif i.split(".")[-1] == "js":
-		text = js_minify(text)
 		file_type = "js"
+		if (use_api_for_js):
+			text = minify_js_by_api(text)
+		else:
+			text = js_minify(text)
 	else:
-		print("!file extention undetected")
 		file_type = "undefined"
+		print("!file extention undetected")
 	
 
 	text = process_text(text)
