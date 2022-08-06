@@ -2,7 +2,7 @@
 
 Script for minify and convert HTML/CSS/JS files to C++ variables. For example, to create a web interface in Arduino / ESP8266 / ES32 projects.
 
-Can work offline using python libs (Have to be installed by `pip install`):
+Can work offline using python libs (have to be installed by `pip install`):
 * css_html_js_minify
 * htmlmin
 
@@ -44,7 +44,7 @@ const char html_file[] = "<a id=wlanpass></a><table><tr><td>SSID&nbsp;</td><td><
 
 ## Configure
 
-You can change settings, changing variables:
+You can change settings by changing the variables:
 ```py
 use_api_for_html = False # use WEB service for HTML minify
 use_api_for_css = True # use WEB service for CSS minify
