@@ -98,7 +98,8 @@ f.write("")
 f.close()
 
 # Statistics
-saved_space_by_type = { }
+total_before_by_type = { }
+total_after_by_type = { }
 
 # Supported file types
 text_file_types = ["html", "css", "js", "svg"]
@@ -140,7 +141,8 @@ for i in files_list_all:
 		
 		len_after = len(text)
 
-		saved_space_by_type[file_type] = saved_space_by_type.get(file_type, 0) + (len_before - len_after)
+		total_after_by_type[file_type] = total_after_by_type.get(file_type, 0) + len_after
+		total_before_by_type[file_type] = total_before_by_type.get(file_type, 0) + len_before
 
 		text = process_text(text)
 
@@ -155,18 +157,20 @@ for i in files_list_all:
 	else:
 		print("Not a text file")
 
-total_saved_space = 0
+total_before = 0
+total_after = 0
 
 print()
 print("Saved space by file type: ")
 
-for x, y in saved_space_by_type.items():
-	print(" {0}: {1}".format(x, y))
-	total_saved_space += y
+for (bk, bv), (ak, av) in zip(total_before_by_type.items(), total_after_by_type.items()):
+	print(" {0}: {1} / {2} ({3})".format(bk, av, bv, (av-bv)))
+	total_before += bv
+	total_after += av
 print()
 
-print("Total saved space: ")
-print(" {0}".format(total_saved_space))
+print("Total: ")
+print(" {0} / {1} ({2})".format(total_after, total_before, (total_after-total_before)))
 
 print()
 print(" --- ")
