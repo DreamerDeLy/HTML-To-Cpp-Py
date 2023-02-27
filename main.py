@@ -14,6 +14,7 @@ use_api_for_js = True # use WEB service for JS minify
 split_lines = False # split output into multiple lines
 escape_percent = False # escape % character to %% (for printf formatting string)
 
+content_folder = "./content/" # input folder
 result_file = "content/result.h" # output file
 
 def process_text(text):
@@ -88,7 +89,7 @@ def getListOfFiles(dirName):
     return allFiles
 
 # Get files 
-files_list_all = getListOfFiles("./content/")
+files_list_all = getListOfFiles(content_folder)
 print(" --- ")
 
 # Clear file
@@ -108,7 +109,7 @@ for i in files_list_all:
 	file_type = i.split(".")[-1]
 
 	if file_type in text_file_types:
-		printed_file_name = file_type + i.replace("." + file_type, "").replace(".", "_").replace("\\", "_").replace("/", "_").replace("-", "")
+		printed_file_name = file_type + "__" + i.replace(content_folder, "").replace("." + file_type, "").replace(".", "_").replace("\\", "_").replace("/", "_").replace("-", "")
 
 		# Read original file
 		f = open(i, "r")
