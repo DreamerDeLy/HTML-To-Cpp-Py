@@ -2,6 +2,7 @@ import os
 import requests
 import glob
 from fnmatch import fnmatch
+import re
 
 from css_html_js_minify import process_single_html_file, process_single_js_file, process_single_css_file, html_minify, js_minify, css_minify
 import htmlmin
@@ -131,11 +132,14 @@ for i in files_list_all:
 				text = minify_js_by_api(text)
 			else:
 				text = js_minify(text)
+		elif file_type == "svg":
+			text = re.sub("<!--(.*?)-->", "", text)
 		else:
 			print("Not supported type")
 		
 		len_after = len(text)
-		saved_space_by_type[file_type] = (len_before - len_after)
+
+		saved_space_by_type[file_type] = saved_space_by_type.get(file_type, 0) + (len_before - len_after)
 
 		text = process_text(text)
 
@@ -156,12 +160,12 @@ print()
 print("Saved space by file type: ")
 
 for x, y in saved_space_by_type.items():
-	print("{0}: {1}".format(x, y))
+	print(" {0}: {1}".format(x, y))
 	total_saved_space += y
 print()
 
 print("Total saved space: ")
-print(total_saved_space)
+print(" {0}".format(total_saved_space))
 
 print()
 print(" --- ")
