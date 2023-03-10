@@ -1,6 +1,6 @@
 # HTML/CSS/JS files to C++ variable convert
 
-Simple script for minify and convert HTML/CSS/JS/CSV files to C++ variables. For example, to create a web interface in Arduino / ESP8266 / ES32 projects.
+Simple script for minify and convert HTML/CSS/JS/SVG files to C++ variables. For example, to create a web interface in Arduino / ESP8266 / ES32 projects.
 
 Can work offline using python libs (have to be installed by `pip install -r requirements.txt`):
 * css_html_js_minify
